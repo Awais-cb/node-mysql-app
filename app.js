@@ -1,6 +1,7 @@
 const express=require('express');
 const mysql= require('mysql');
 const expHandleBars= require('express-handlebars');
+const path= require('path');
 
 
 const app=express();
@@ -27,6 +28,8 @@ db.connect(function(err) {
 app.engine('handlebars',expHandleBars({defaultLayout:'main'}));
 app.set('view engine','handlebars');
 
+// defining route external front end modules placed local
+app.use(express.static(__dirname + '/views/includes'));
 
 
 app.get('/',function (req,res,next) {
