@@ -43,6 +43,22 @@ app.use('/post/add', express.static(path.join(__dirname + '/views/includes/')));
 app.use('/favicon.png', express.static(path.join('/view/includes/')));
 
 
+// Creating DB from application just for practice
+/*
+app.get('/createdb',function(req,res) {
+	let sql='CREATE DATABASE nodemysql';
+	db.query(sql,function(err,result) {
+		if(err){ 
+			throw err;
+		}else{
+			console.log(result);
+			res.send('Database has been created!');
+		}
+
+	});
+});
+*/
+
 
 app.get('/',function (req,res,next) {
 	res.render('index');
@@ -80,7 +96,7 @@ app.post('/addpost',function (req,res,next) {
 		let post_title = req.body.post_title;
 		let post_text = req.body.post_text;
 		console.log(post_title);
-		console.log(post_title);
+		console.log(post_text);
 		res.render('add_post');
 
 
