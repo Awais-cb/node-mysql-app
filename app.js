@@ -9,20 +9,20 @@ const app=express();
 
 // setting up connection
 const db=mysql.createConnection({
-		host:'localhost',
-		user:'root',
-		password:'',
-		database:'node_mysql_app'
-	});
+	host:'localhost',
+	user:'root',
+	password:'',
+	database:'node_mysql_app'
+});
 
 // connecting to mysql
 db.connect(function(err) {
-		if(err){
-			throw err;
-		}else{
-			console.log('We are now connected to MySQL');
-		} 
-	});
+	if(err){
+		throw err;
+	}else{
+		console.log('We are now connected to MySQL');
+	} 
+});
 
 
 
@@ -81,27 +81,27 @@ app.get('/contact',function (req,res,next) {
 
 // process contact form
 app.post('/contact',function (req,res,next) {
-		let user_email = req.body.user_email;
-		let email_subject = req.body.email_subject;
-		let email_text = req.body.email_text;
-		console.log(user_email);
-		console.log(email_subject);
-		console.log(email_text);
-		res.render('contact');
+	let user_email = req.body.user_email;
+	let email_subject = req.body.email_subject;
+	let email_text = req.body.email_text;
+	console.log(user_email);
+	console.log(email_subject);
+	console.log(email_text);
+	res.render('contact');
 
 
 });
 // process add post
 app.post('/addpost',function (req,res,next) {
-		let post_title = req.body.post_title;
-		let post_text = req.body.post_text;
-		console.log(post_title);
-		console.log(post_text);
-		res.render('add_post');
+	let post_title = req.body.post_title;
+	let post_text = req.body.post_text;
+	console.log(post_title);
+	console.log(post_text);
+	res.render('add_post');
 
 
 });
- 
+
 app.listen(8080,function () {
 	console.log('Server started!');
 });
