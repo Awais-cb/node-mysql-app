@@ -4,6 +4,7 @@ const expHandleBars = require('express-handlebars');
 const path = require('path');
 const bodyParser = require('body-parser');
 const dateTime = require('node-datetime');
+const customValidator = require('./custom_modules/custom_validator');
 
 const app=express();
 
@@ -82,13 +83,13 @@ app.get('/',function (req,res,next) {
 			throw err;
 		}else{
 			console.log(result);
-			if(true){
+			if(customValidator.isEmpty(result)==true){
 				res.render('index',{
 					result:result
 				});
 			}else{
 				res.render('index',{
-					no_result:"No post has been added yet please post one!"
+					no_result:"No post has been added yet please add one!"
 				});
 			}
 		}
@@ -104,12 +105,13 @@ app.get('/getcompletepost/:id',function (req,res,next) {
 			throw err;
 		}else{
 			console.log(result);
-			if(true){
+			console.log(customValidator.isEmpty(result));
+			if(customValidator.isEmpty(result)==true){
 				res.render('complete_post_view',{
 					result:result
 				});
 			}else{
-				res.render('compelete_post_view',{
+				res.render('complete_post_view',{
 					no_result:"No post found!"
 				});
 			}
