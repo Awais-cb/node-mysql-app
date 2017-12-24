@@ -8,7 +8,11 @@
 
           <h1 class="mt-4">Add Post</h1>
           <hr>
-
+          {{#if post_added}} 
+          <div class="alert alert-success" role="alert">
+            <strong>Success!</strong> {{{post_added}}}
+          </div>
+          {{/if}}
           <!-- Comments Form -->
           <div class="card my-4">
             <h5 class="card-header">Write post:</h5>

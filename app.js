@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const expHandleBars = require('express-handlebars');
 const path = require('path');
 const bodyParser = require('body-parser');
-
+const dateTime = require('node-datetime');
 
 const app=express();
 
@@ -110,13 +110,39 @@ app.post('/contact',function (req,res,next) {
 app.post('/addpost',function (req,res,next) {
 	let post_title = req.body.post_title;
 	let post_text = req.body.post_text;
-	let post_date = Date.now();
 	let post_author = req.body.post_author;
-	console.log(post_title);
-	console.log(post_text);
-	console.log(post_date);
-	console.log(post_author);
-	res.render('add_post');
+	
+	let raw_datetime = dateTime.create()
+	let post_datetime = raw_datetime.format('Y-m-d H:M:S');
+
+	let post_data={
+		post_title:post_title,
+		post_text:post_text,
+		post_date:post_datetime,
+		post_author:post_author
+	};
+
+	sql = "INSERT INTO posts set ?";
+	
+	db.query(sql,post_data,function(err,result) {
+		if(err){
+			throw err;
+		}else{
+			console.log(result);
+			res.render('add_post',{
+				post_added:"Your Post has been added!"
+			});
+
+		}
+	});
+	// console.log(post_title);
+	// console.log(post_text);
+	// console.log(post_datetime);
+	// console.log(post_author);
+
+
+
+	
 
 
 });
