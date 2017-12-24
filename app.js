@@ -59,6 +59,21 @@ app.get('/createdb',function(req,res) {
 });
 */
 
+// Creating table for our selected db
+/*
+app.get('/createpoststable',function(req,res) {
+	let sql='CREATE TABLE posts(post_id int AUTO_INCREMENT, post_title varchar(100), post_text varchar(255), post_date datetime, post_author varchar(255), PRIMARY KEY (post_id))';
+	db.query(sql,function(err,result) {
+		if(err){
+			throw err;
+		}else{
+			console.log(result);
+			res.send('Posts table created!');
+		}
+	});
+
+});
+*/
 
 app.get('/',function (req,res,next) {
 	res.render('index');
@@ -95,8 +110,12 @@ app.post('/contact',function (req,res,next) {
 app.post('/addpost',function (req,res,next) {
 	let post_title = req.body.post_title;
 	let post_text = req.body.post_text;
+	let post_date = Date.now();
+	let post_author = req.body.post_author;
 	console.log(post_title);
 	console.log(post_text);
+	console.log(post_date);
+	console.log(post_author);
 	res.render('add_post');
 
 
