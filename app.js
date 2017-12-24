@@ -5,6 +5,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const dateTime = require('node-datetime');
 const customValidator = require('./custom_modules/custom_validator');
+const customHelpers = require('./custom_modules/custom_helpers');
 
 const app=express();
 
@@ -82,8 +83,8 @@ app.get('/',function (req,res,next) {
 		if(err){
 			throw err;
 		}else{
-			console.log(result);
-			if(customValidator.isEmpty(result)==true){
+			// console.log(result);
+			if(customValidator.isEmpty(result)==false){
 				res.render('index',{
 					result:result
 				});
@@ -104,9 +105,8 @@ app.get('/getcompletepost/:id',function (req,res,next) {
 		if(err){
 			throw err;
 		}else{
-			console.log(result);
-			console.log(customValidator.isEmpty(result));
-			if(customValidator.isEmpty(result)==true){
+			// console.log(result);
+			if(customValidator.isEmpty(result)==false){
 				res.render('complete_post_view',{
 					result:result
 				});
@@ -136,6 +136,7 @@ app.get('/contact',function (req,res,next) {
 
 // process contact form
 app.post('/contact',function (req,res,next) {
+	
 	let user_email = req.body.user_email;
 	let email_subject = req.body.email_subject;
 	let email_text = req.body.email_text;
@@ -144,14 +145,16 @@ app.post('/contact',function (req,res,next) {
 	console.log(email_text);
 	res.render('contact');
 
-
 });
 
 // process add post
 app.post('/addpost',function (req,res,next) {
 	let post_title = req.body.post_title;
+	post_title = customHelpers.upperCaseString(post_title);
 	let post_text = req.body.post_text;
+	post_text = customHelpers.upperCaseString(post_text);
 	let post_author = req.body.post_author;
+	post_author = customHelpers.upperCaseString(post_author);
 	
 	let raw_datetime = dateTime.create()
 	let post_datetime = raw_datetime.format('Y-m-d H:M:S');
@@ -169,11 +172,9 @@ app.post('/addpost',function (req,res,next) {
 		if(err){
 			throw err;
 		}else{
-			console.log(result);
 			res.render('add_post',{
 				post_added:"Your Post has been added!"
 			});
-
 		}
 	});
 
