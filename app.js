@@ -25,36 +25,67 @@ db.connect(function(err) {
 	});
 
 
+
 // setting up the view engine
 app.engine('handlebars',expHandleBars({defaultLayout:'main'}));
 app.set('view engine','handlebars');
 
+// setting up body parser for forms 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({'extended':false}));
+
 // defining routes external front end modules placed local
-// path.join normalizes url,paths
-app.use('/',express.static(path.join(__dirname + '/views/includes')));
-app.use('/post/add', express.static(path.join(__dirname + '/views/includes')));
+// path.join normalizes paths
+app.use('/',express.static(path.join(__dirname + '/views/includes/')));
+// 'post/add' is virtual path prefix
+app.use('/post/add', express.static(path.join(__dirname + '/views/includes/')));
+// setting up favicon
+app.use('/favicon.png', express.static(path.join('/view/includes/')));
 
 
-
-console.log(__dirname + '/views/includes');
-console.log(path.join(__dirname + '/views/includes'));
 
 app.get('/',function (req,res,next) {
 	res.render('index');
 });
 
-app.get('/post/add',function (req,res,next) {
+app.get('/addpost',function (req,res,next) {
 	res.render('add_post');
 });
 
+
+app.get('/about',function (req,res,next) {
+
+	res.render('about');
+});
+
+app.get('/contact',function (req,res,next) {
+
+	res.render('contact');
+});
+
+// process contact form
+app.post('/contact',function (req,res,next) {
+		let user_email = req.body.user_email;
+		let email_subject = req.body.email_subject;
+		let email_text = req.body.email_text;
+		console.log(user_email);
+		console.log(email_subject);
+		console.log(email_text);
+		res.render('contact');
+
+
+});
 // process add post
-app.post('/post/add',function (req,res,next) {
+app.post('/addpost',function (req,res,next) {
+		let post_title = req.body.post_title;
+		let post_text = req.body.post_text;
+		console.log(post_title);
+		console.log(post_title);
+		res.render('add_post');
 
-	res.render('add_post');
+
 });
-
-
-
+ 
 app.listen(8080,function () {
 	console.log('Server started!');
 });
