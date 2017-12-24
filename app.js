@@ -41,6 +41,7 @@ app.use(bodyParser.urlencoded({'extended':false}));
 app.use('/',express.static(path.join(__dirname + '/views/includes/')));
 // 'post/add' is virtual path prefix
 app.use('/getcompletepost/', express.static(path.join(__dirname + '/views/includes/')));
+app.use('/updatepost/', express.static(path.join(__dirname + '/views/includes/')));
 // setting up favicon
 app.use('/favicon.png', express.static(path.join('/view/includes/')));
 
@@ -76,6 +77,20 @@ app.get('/createpoststable',function(req,res) {
 
 });
 */
+
+app.get('/addpost',function (req,res,next) {
+	res.render('add_post');
+});
+
+
+app.get('/about',function (req,res,next) {
+	res.render('about');
+});
+
+app.get('/contact',function (req,res,next) {
+	res.render('contact');
+});
+
 
 app.get('/',function (req,res,next) {
 	sql = 'SELECT * FROM posts';
@@ -119,20 +134,69 @@ app.get('/getcompletepost/:id',function (req,res,next) {
 	});
 });
 
-app.get('/addpost',function (req,res,next) {
-	res.render('add_post');
+app.get('/updatepost/:id',function (req,res,next) {
+	post_id = req.params.id;
+	post_data={post_id:post_id};
+	sql = 'SELECT * FROM posts where ?';
+	db.query(sql,post_data,function(err,result) {
+		if(err){
+			throw err;
+		}else{
+			// console.log(result);
+			if(customValidator.isEmpty(result)==false){
+				res.render('update_post',{
+					result:result
+				});
+			}else{
+				res.render('update_post',{
+					no_result:"No post found!"
+				});
+			}
+		}
+	});
 });
 
+// process update post
+app.post('/updatepost',function (req,res,next) {
+	let post_id = req.body.post_id;
+	let post_title = req.body.post_title;
+	let post_text = req.body.post_text;
+	let post_author = req.body.post_author;
 
-app.get('/about',function (req,res,next) {
+	console.log(post_id);
+	console.log(post_title);
+	console.log(post_text);
+	console.log(post_author);
 
-	res.render('about');
+	
+	post_title = customHelpers.upperCaseString(post_title);
+	post_text = customHelpers.upperCaseString(post_text);
+	post_author = customHelpers.upperCaseString(post_author);
+	
+	let raw_datetime = dateTime.create()
+	let post_update_datetime = raw_datetime.format('Y-m-d H:M:S');
+
+	let post_data={
+		post_title:post_title,
+		post_text:post_text,
+		last_updated:post_update_datetime,
+		post_author:post_author
+	};
+
+	sql = "UPDATE posts set ? WHERE post_id = "+post_id+" ";
+	console.log(sql+" "+post_data);
+	db.query(sql,post_data,function(err,result) {
+		if(err){
+			throw err;
+		}else{
+			res.render('complete_post_view',{
+				post_updated:"Your Post has been Updated!"
+			});
+		}
+	});
+
 });
 
-app.get('/contact',function (req,res,next) {
-
-	res.render('contact');
-});
 
 // process contact form
 app.post('/contact',function (req,res,next) {
@@ -150,10 +214,11 @@ app.post('/contact',function (req,res,next) {
 // process add post
 app.post('/addpost',function (req,res,next) {
 	let post_title = req.body.post_title;
-	post_title = customHelpers.upperCaseString(post_title);
 	let post_text = req.body.post_text;
-	post_text = customHelpers.upperCaseString(post_text);
 	let post_author = req.body.post_author;
+	
+	post_title = customHelpers.upperCaseString(post_title);
+	post_text = customHelpers.upperCaseString(post_text);
 	post_author = customHelpers.upperCaseString(post_author);
 	
 	let raw_datetime = dateTime.create()

@@ -3,12 +3,15 @@
 
     <div class="row">
       <div class="col-lg-8">
+        {{#if post_updated}} 
+         <div class="alert alert-success" role="alert">
+          <strong>Success!</strong> {{{post_updated}}}
+        </div>
+        {{/if}}
+
         {{#if result}}
         {{#each result}}
-        <!-- Post Content Column -->
         
-
-        <!-- Title -->
         <a href="/getcompletepost/{{post_id}}">
           <h1 class="mt-4">{{{post_title}}}</h1>
         </a>
