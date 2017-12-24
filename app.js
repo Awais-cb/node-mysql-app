@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({'extended':false}));
 // path.join normalizes paths
 app.use('/',express.static(path.join(__dirname + '/views/includes/')));
 // 'post/add' is virtual path prefix
-app.use('/post/add', express.static(path.join(__dirname + '/views/includes/')));
+app.use('/getcompletepost/', express.static(path.join(__dirname + '/views/includes/')));
 // setting up favicon
 app.use('/favicon.png', express.static(path.join('/view/includes/')));
 
@@ -46,7 +46,7 @@ app.use('/favicon.png', express.static(path.join('/view/includes/')));
 // Creating DB from application just for practice
 /*
 app.get('/createdb',function(req,res) {
-	let sql='CREATE DATABASE nodemysql';
+	let sql='CREATE DATABASE node_mysql_app';
 	db.query(sql,function(err,result) {
 		if(err){ 
 			throw err;
@@ -76,7 +76,45 @@ app.get('/createpoststable',function(req,res) {
 */
 
 app.get('/',function (req,res,next) {
-	res.render('index');
+	sql = 'SELECT * FROM posts';
+	db.query(sql,function(err,result) {
+		if(err){
+			throw err;
+		}else{
+			console.log(result);
+			if(true){
+				res.render('index',{
+					result:result
+				});
+			}else{
+				res.render('index',{
+					no_result:"No post has been added yet please post one!"
+				});
+			}
+		}
+	});
+});
+
+app.get('/getcompletepost/:id',function (req,res,next) {
+	post_id = req.params.id;
+	post_data={post_id:post_id};
+	sql = 'SELECT * FROM posts where ?';
+	db.query(sql,post_data,function(err,result) {
+		if(err){
+			throw err;
+		}else{
+			console.log(result);
+			if(true){
+				res.render('complete_post_view',{
+					result:result
+				});
+			}else{
+				res.render('compelete_post_view',{
+					no_result:"No post found!"
+				});
+			}
+		}
+	});
 });
 
 app.get('/addpost',function (req,res,next) {
@@ -106,6 +144,7 @@ app.post('/contact',function (req,res,next) {
 
 
 });
+
 // process add post
 app.post('/addpost',function (req,res,next) {
 	let post_title = req.body.post_title;
@@ -135,15 +174,6 @@ app.post('/addpost',function (req,res,next) {
 
 		}
 	});
-	// console.log(post_title);
-	// console.log(post_text);
-	// console.log(post_datetime);
-	// console.log(post_author);
-
-
-
-	
-
 
 });
 
