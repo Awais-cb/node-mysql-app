@@ -4,6 +4,7 @@ const expHandleBars = require('express-handlebars');
 const path = require('path');
 const bodyParser = require('body-parser');
 const dateTime = require('node-datetime');
+const methodOverride =require('method-override');
 const customValidator = require('./custom_modules/custom_validator');
 const customHelpers = require('./custom_modules/custom_helpers');
 
@@ -36,12 +37,16 @@ app.set('view engine','handlebars');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({'extended':false}));
 
+// init method override for delete request\
+app.use(methodOverride('_method'));
+
 // defining routes external front end modules placed local
 // path.join normalizes paths
 app.use('/',express.static(path.join(__dirname + '/views/includes/')));
 // 'post/add' is virtual path prefix
 app.use('/getcompletepost/', express.static(path.join(__dirname + '/views/includes/')));
 app.use('/updatepost/', express.static(path.join(__dirname + '/views/includes/')));
+app.use('/deletepost/', express.static(path.join(__dirname + '/views/includes/')));
 // setting up favicon
 app.use('/favicon.png', express.static(path.join('/view/includes/')));
 
@@ -243,6 +248,21 @@ app.post('/addpost',function (req,res,next) {
 		}
 	});
 
+});
+
+app.delete('/deletepost/:id',function(req,res,next) {
+	post_id = req.params.id;
+	post_data = {post_id:post_id};
+	sql = "DELETE FROM posts where ?";
+	db.query(sql,post_data,function(err,result) {
+		if(err){
+			throw err;
+		}
+		res.render('complete_post_view',{
+			post_del:"Post has been deleted successfully",
+		});	
+	});
+	
 });
 
 app.listen(8080,function () {
