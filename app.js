@@ -14,7 +14,7 @@ const app=express();
 const db=mysql.createConnection({
 	host:'localhost',
 	user:'root',
-	password:'',
+	password:'myoddbpass',
 	database:'node_mysql_app'
 });
 
@@ -70,7 +70,7 @@ app.get('/createdb',function(req,res) {
 // Creating table for our selected db
 /*
 app.get('/createpoststable',function(req,res) {
-	let sql='CREATE TABLE posts(post_id int AUTO_INCREMENT, post_title varchar(100), post_text varchar(255), post_date datetime, post_author varchar(255), PRIMARY KEY (post_id))';
+	let sql='CREATE TABLE posts(post_id int AUTO_INCREMENT, post_title varchar(100), post_text varchar(255), post_date datetime, post_author varchar(255), last_updated timestamp, PRIMARY KEY (post_id))';
 	db.query(sql,function(err,result) {
 		if(err){
 			throw err;
@@ -84,6 +84,9 @@ app.get('/createpoststable',function(req,res) {
 */
 
 app.get('/addpost',function (req,res,next) {
+	setTimeout(function () {
+		console.log('Timer executed', 'Update done')
+	}, 5000)
 	res.render('add_post');
 });
 
